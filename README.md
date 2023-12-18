@@ -73,9 +73,10 @@ Notice that the defining feature of a gray color is $r=g=b$. This number is then
 __Figure 3__ Sharpened image.
 
 The third step is to sharpen the image using a two-directional sharpening kernel in order to more clearly define the edges in the image. The sharpening kernel includes two separate kernels with one for the x-direction and the other for the y-direction. In order to sharpen the image evenly in both directions, $H_1=H_2$. The value $\alpha$ controls the degree of sharpening. Here, we use 4, though 1 is also a standard value.
-$$H_1=\begin{bmatrix} 0 & -1 & 0 \\\ -1 & \alpha + 4 & -1 \\\ 0 & -1 & 0 \end{bmatrix}$$
-$$H_2=\begin{bmatrix} 0 & -1 & 0 \\\ -1 & \alpha + 4 & -1 \\\ 0 & -1 & 0 \end{bmatrix}$$
-
+```math
+H_1=\begin{bmatrix} 0 & -1 & 0 \\ -1 & \alpha + 4 & -1 \\ 0 & -1 & 0 \end{bmatrix} \\
+H_2=\begin{bmatrix} 0 & -1 & 0 \\ -1 & \alpha + 4 & -1 \\ 0 & -1 & 0 \end{bmatrix}
+```
 ![Image convolution process for x-direction](/readmeImages/convolution.png)
 __Figure 4__ Image convolution process.
 
@@ -94,8 +95,10 @@ The sharpened image is displayed im Figure 4. The primary difference between the
 __Figure 5__ Image after Sobel processing.
 
 The fourth step is to apply the Sobel operator. Like the sharpening kernel, the Sobel operator uses image convolution with the following x and y kernels ([Tian 2021](https://www.mdpi.com/2079-9292/10/6/655)).
-$$G_x=\begin{bmatrix} 1 & 0 & -1 \\\ 2 & 0 & -2 \\\ 1 & 0 & -1 \end{bmatrix}$$
-$$G_y=\begin{bmatrix} 1 & 2 & 1 \\\ 0 & 0 & 0 \\\ -1 & -2 & -1 \end{bmatrix}$$
+```math
+G_x=\begin{bmatrix} 1 & 0 & -1 \\ 2 & 0 & -2 \\ 1 & 0 & -1 \end{bmatrix} \\
+G_y=\begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{bmatrix}
+```
 The Sobel operator picks out the edges in the image and sets their grayscale value according to their definition, with 255 being more defined. As a result, the image displays the skeleton of the original image, similar to an x-ray in appearance. Figure 5 shows the image after the Sobel operator is applied.
 
 The vertices in the point cloud come from the set of pixels that meet the threshold value. If a pixel is part of a well-defined edge, the rgb value will be closer to white and fulfill the threshold. Less important points that are not sufficiently white, on the other hand, are filtered out. 
