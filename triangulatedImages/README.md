@@ -10,7 +10,7 @@ There are several existing algorithms to perform image triangulation. [Marwood e
 Endre Simo also details an image triangulation process in his blog post titled [Delaunay Image Triangulation](https://www.esimov.com/2019/04/image-triangulation-in-go). While both Simo's algorithm and our algorithm use Sobel edge detection and Delaunay triangulation, the two processes were devloped independently without reference. Simo's method does not include a density reduction parameter or sharpening step and retains the vertices output by edge detection. Instead, similar edges are removed to clean up the appearance.
 
 ## Installation
-In order to run the program, download imageTriangulation.ipynb and open in a code editor such as Visual Studio code. Ensure that `python` as well as the following dependencies are installed:
+In order to run the program, download imageTriangulation.ipynb and open in a code editor such as Visual Studio code. Ensure that the following dependencies are installed:
 - math
 - matplotlib
 - numpy
@@ -18,24 +18,16 @@ In order to run the program, download imageTriangulation.ipynb and open in a cod
 - PIL
 - random
 - scipy
-To select which image is triangulated, replace the string `image_path` with the file path for the desired image. The optimal `threshold` and `densityReduction` parameters vary depending on the image, but a general guideline is to use lower thresholds for more detailed images. In order to run the program, use the Terminal navigate to the directory where the project is stored.
-```cd file_path/ImageTriangulation/```
-Run
-```python imageTriangulation.py```
-to triangulate the image. Once the window displays the uncolored triangulation, close the window to view the final result.
-
-Run
-```python delaunayTriangulation.py```
-to create a randomized Delaunay triangulation.
+To select which image is triangulated, replace the string `image_path` with the file path for the desired image. The optimal `threshold` and `densityReduction` parameters vary depending on the image, but a general guideline is to use lower thresholds for more detailed images. The notebook can then be run sequentially. The program takes approximately a minute to run.
 
 ## Included Folders and Files
 The originalImages folder contains sample images. In order to use them, replace the string `tajMahal.jpg` with the name of the desired image.
 
 The triangulatedImages folder contains the triangulated versions of the images in the originalImages folder for reference.
 
-imageTriangulation.ipynb contains the Python script for creating an image triangulation with vertices chosen with Sobel edge detection. The commented out code randomly generates final vertices instead of using Sobel edge detection.
+imageTriangulation.ipynb contains the Jupyter Notebook for creating an image triangulation with vertices chosen with Sobel edge detection. The commented out block includes code to randomly generate final vertices.
 
-delaunayTriangulation.py contains a Python script for determining the Delaunay triangulation for a randomized point cloud. Due to time constraints, the algorithm currently only works for relatively sparse point clouds. The algorithm is loosely based off of the pseudocode provided by [Mount 2020](https://www.cs.umd.edu/class/spring2020/cmsc754/Lects/lect13-delaun-alg.pdf).
+delaunayTriangulation.ipynb contains a separate Jupyter Notebook for determining the Delaunay triangulation for a randomized point cloud. Due to time constraints, the algorithm currently only works for relatively sparse point clouds. The algorithm is loosely based off of the pseudocode provided by [Mount 2020](https://www.cs.umd.edu/class/spring2020/cmsc754/Lects/lect13-delaun-alg.pdf).
 
 ## Algorithm
 The algorithm consists of six steps:
