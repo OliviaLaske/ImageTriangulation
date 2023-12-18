@@ -80,15 +80,15 @@ H_2=\begin{bmatrix} 0 & -1 & 0 \\ -1 & \alpha + 4 & -1 \\ 0 & -1 & 0 \end{bmatri
 ![Image convolution process for x-direction](/readmeImages/convolution.png)
 __Figure 4__ Image convolution process.
 
-Figure 5 demonstrates the image convolution process for the x-direction. To perform the convolution, the kernel is overlaid on each pixel in the image. The values in the $H_1$ are multiplied by their corresponding values in the overlay region then summed in a method similar to the dot product. The output 
+Figure 4 demonstrates the image convolution process for the x-direction. To perform the convolution, the kernel is overlaid on each pixel in the image. The values in $H_1$ are multiplied by their corresponding values in the overlay region then summed in a method similar to the dot product. The output 
 is equal to $H_x$. Because we are using a two-directional kernel, the same process must repeated with $H_2$.
 $$H_x=\sum_{i=1}^9 H_{1,i}P_i$$
 $$H_y=\sum_{i=1}^9 H_{2,j}P_j$$
-where $H_{1,i}$ is the $i$th value in the $H_1$ kernel, $H_{2,j}$ is the $i$th value in the $H_2$ kernel, and $P_i$ is the $i$th pixel in the overlay region.
+where $H_{1,i}$ is the *i*th value in the $H_1$ kernel, $H_{2,j}$ is the *i*th value in the $H_2$ kernel, and $P_i$ is the *i*th pixel in the overlay region.
 
 The final grayscale value for the central pixel in the overlay region is calculated as follows:
 $$H=\sqrt{H_x^2+H_y^2}$$
-The sharpened image is displayed im Figure 4. The primary difference between the grayscale and sharpened images is the definition of edges. The boundary between the trees and the sky, for instance, becomes much sharper.
+The sharpened image is displayed in Figure 3. The primary difference between the grayscale and sharpened images is the definition of edges. The boundary between the trees and the sky, for instance, becomes much sharper.
 
 ### 4. Apply Sobel Operator
 ![Image after Sobel operator is applied](/readmeImages/tajMahal_sobel.jpg)
