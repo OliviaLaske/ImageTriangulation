@@ -131,7 +131,7 @@ __Figure 9__ Point cloud triangulation and final image triangulation for density
 Changing the density reduction does not significantly alter the appearance of the final image trianglulation compared to varying the threshold. In other words, the output images in Figure 8 do not look very different from the ones in Figure 9. The image in the leftmost panel in Figure 9, though, demonstrates the extent to which density reduction declutters the points. As a result, the main purpose of density reduction is to decrease run time and avoid clusters of very small triangles.
 
 ### Ramdomized Point Cloud
-![Image triangulation using a random point cloud](/readmeImages/densityVariation.png)
+![Image triangulation using a random point cloud](/readmeImages/randomPoints.png)
 __Figure 10__ Point cloud triangulation and final image triangulation for a randomized point cloud.
 
 If we use random points as the vertices for the triangulation, the integrity of the image is lost. The image becomes quite unrecognizable. Figure 10, for example, shows the image triangulation using 1200 randomly generated points, which is slightly more than the number of vertices that the edge detection method finds. Many of the features are lost, and the image becomes garbled. By using edge detection, though, we can reduce the number of points needed to make a recognizable image and preserve the underlying skeleton.
