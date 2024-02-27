@@ -5,12 +5,12 @@ While triangulating an image is a relatively simple process, difficulties arise 
 ## Introduction
 Image triangulation creates an abstract representation of an image as a form of art, which can be defined by four primary principles. The output image must divide the original image into a set of non-overlapping triangles, simplify the original image, approximate original image features as triangles, and retain the integrity of the original image.
 
-There are several existing algorithms to perform image triangulation. [Marwood et. al. (2018)](https://arxiv.org/pdf/1809.02257.pdf) discuss a greedy algorithm that calculates a least important vertex as well as a stochastic process that mutates vertices according to a probability distribution. The primary goal of the algorithm is to compress images as opposed to create art. However, both least important vertices and stochastic processes are relavent in creating artwork. For instance, filtering out less important vertex is one approach to sparsifying the image point cloud. In addition, the point cloud can be generated using a stochastic process as an alternative triangulation method.
+There are several existing algorithms to perform image triangulation. [Marwood et. al. (2018)](https://arxiv.org/pdf/1809.02257.pdf) discuss a greedy algorithm that calculates a least important vertex as well as a stochastic process that mutates vertices according to a probability distribution. The primary goal of the algorithm is compressing images as opposed to creating art. However, both least important vertices and stochastic processes are relevant in creating artwork. For instance, filtering out less important vertices is one approach to sparsifying the image point cloud. In addition, the point cloud can be generated using a stochastic process as an alternative triangulation method.
 
-Endre Simo also details an image triangulation process in his blog post titled [Delaunay Image Triangulation](https://www.esimov.com/2019/04/image-triangulation-in-go). While both Simo's algorithm and our algorithm use Sobel edge detection and Delaunay triangulation, the two processes were devloped independently without reference. Simo's method does not include a density reduction parameter or sharpening step and retains the vertices output by edge detection. Instead, similar edges are removed to clean up the appearance.
+Endre Simo also details an image triangulation process in his blog post titled [Delaunay Image Triangulation](https://www.esimov.com/2019/04/image-triangulation-in-go). While both Simo's algorithm and our algorithm use Sobel edge detection and Delaunay triangulation, the two processes were developed independently without reference. Simo's method does not include a density reduction parameter or sharpening step and retains the vertex output by edge detection. Instead, similar edges are removed to clean up the appearance.
 
 ## Installation
-In order to run the program, download imageTriangulation.ipynb and open in a code editor such as Visual Studio code. Ensure that `python` as well as the following dependencies are installed:
+In order to run the program, download imageTriangulation.ipynb and open it in a code editor such as Visual Studio code. Ensure that `python` as well as the following dependencies are installed:
 - math
 - matplotlib
 - numpy
@@ -19,7 +19,7 @@ In order to run the program, download imageTriangulation.ipynb and open in a cod
 - random
 - scipy
 
-To select which image is triangulated, replace the string `image_path` with the file path for the desired image. The optimal `threshold` and `densityReduction` parameters vary depending on the image, but a general guideline is to use lower thresholds for more detailed images. In order to run the program, use the Terminal navigate to the directory where the project is stored.
+To select which image is triangulated, replace the string `image_path` with the file path for the desired image. The optimal `threshold` and `densityReduction` parameters vary depending on the image, but a general guideline is to use lower thresholds for more detailed images. In order to run the program, use the Terminal to navigate to the directory where the project is stored.
 
 ```cd file_path/ImageTriangulation/```
 
@@ -42,7 +42,7 @@ The `triangulatedImages` folder contains the triangulated versions of the images
 
 `imageTriangulation.py` contains the Python script for creating an image triangulation with vertices chosen with Sobel edge detection. The commented out code randomly generates final vertices instead of using Sobel edge detection.
 
-`delaunayTriangulation.py` contains a Python script for determining the Delaunay triangulation for a randomized point cloud. Due to time constraints, the algorithm currently only works for relatively sparse point clouds. The algorithm is loosely based off of the pseudocode provided by [Mount 2020](https://www.cs.umd.edu/class/spring2020/cmsc754/Lects/lect13-delaun-alg.pdf).
+`delaunayTriangulation.py` contains a Python script for determining the Delaunay triangulation for a randomized point cloud. Due to time constraints, the algorithm currently only works for relatively sparse point clouds. The algorithm is loosely based on the pseudocode provided by [Mount 2020](https://www.cs.umd.edu/class/spring2020/cmsc754/Lects/lect13-delaun-alg.pdf).
 
 ## Algorithm
 The algorithm consists of six steps:
@@ -81,7 +81,7 @@ H_2=\begin{bmatrix} 0 & -1 & 0 \\ -1 & \alpha + 4 & -1 \\ 0 & -1 & 0 \end{bmatri
 __Figure 4__ Image convolution process.
 
 Figure 4 demonstrates the image convolution process for the x-direction. To perform the convolution, the kernel is overlaid on each pixel in the image. The values in $H_1$ are multiplied by their corresponding values in the overlay region then summed in a method similar to the dot product. The output 
-is equal to $H_x$. Because we are using a two-directional kernel, the same process must repeated with $H_2$.
+is equal to $H_x$. Because we are using a two-directional kernel, the same process must be repeated with $H_2$.
 $$H_x=\sum_{i=1}^9 H_{1,i}P_i$$
 $$H_y=\sum_{i=1}^9 H_{2,j}P_j$$
 where $H_{1,i}$ is the *i*th value in the $H_1$ kernel, $H_{2,j}$ is the *i*th value in the $H_2$ kernel, and $P_i$ is the *i*th pixel in the overlay region.
@@ -113,7 +113,7 @@ The fifth step is to triangulate the point cloud. Even with a threshold value, t
 ![Final triangulated image](/readmeImages/tajMahal_final.png)
 __Figure 7__ Final triangulated image after coloring in triangles.
 
-The sixth and final step is to color in the triangles. For each triangle, we calcuate centroid $(x,y)$ and round to the nearest integer. The final color of the triangle is equal to the rgb value at pixel $(x,y)$ in the original image. Figure 7 depicts the final image triangulation.
+The sixth and final step is to color in the triangles. For each triangle, we calculate centroid $(x,y)$ and round to the nearest integer. The final color of the triangle is equal to the rgb value at pixel $(x,y)$ in the original image. Figure 7 depicts the final image triangulation.
 
 ## Varying Triangulation Parameters
 The two varying parameters in the algorithm are the threshold value and density reduction parameter.
@@ -128,7 +128,7 @@ The threshold value is directly related to the number of vertices in the triangu
 ![Image triangulation for varying point cloud densities](/readmeImages/densityVariation.png)
 __Figure 9__ Point cloud triangulation and final image triangulation for density reductions of 1, 20, and 40.
 
-Changing the density reduction does not significantly alter the appearance of the final image trianglulation compared to varying the threshold. In other words, the output images in Figure 8 do not look very different from the ones in Figure 9. The image in the leftmost panel in Figure 9, though, demonstrates the extent to which density reduction declutters the points. As a result, the main purpose of density reduction is to decrease run time and avoid clusters of very small triangles.
+Changing the density reduction does not significantly alter the appearance of the final image triangulation compared to varying the threshold. In other words, the output images in Figure 8 do not look very different from the ones in Figure 9. The image in the leftmost panel in Figure 9, though, demonstrates the extent to which density reduction declutters the points. As a result, the main purpose of density reduction is to decrease run time and avoid clusters of very small triangles.
 
 ### Ramdomized Point Cloud
 ![Image triangulation using a random point cloud](/readmeImages/randomPoints.png)
