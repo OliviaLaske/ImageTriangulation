@@ -64,36 +64,32 @@ Notice that the defining feature of a gray color is $r=g=b$. This number is then
 ![Sharpened image](/readmeImages/waterLily_sharpened.jpg)
 __Figure 3__ Sharpened image.
 
-The third step is to sharpen the image using a two-directional sharpening kernel in order to more clearly define the edges in the image. The sharpening kernel includes two separate kernels with one for the x-direction and the other for the y-direction. In order to sharpen the image evenly in both directions, $H_1=H_2$. The value $\alpha$ controls the degree of sharpening. Here, we use 4, though 1 is also a standard value.
+The third step is to sharpen the image using a $3\times3$ kernel in order to more clearly define the edges in the image. The value $\alpha$ controls the degree of sharpening. Here, we use 4, though 1 is also a standard value.
 ```math
-H_1=\begin{bmatrix} 0 & -1 & 0 \\ -1 & \alpha + 4 & -1 \\ 0 & -1 & 0 \end{bmatrix} \\
-H_2=\begin{bmatrix} 0 & -1 & 0 \\ -1 & \alpha + 4 & -1 \\ 0 & -1 & 0 \end{bmatrix}
+K=\begin{bmatrix} 0 & -1 & 0 \\ -1 & \alpha + 4 & -1 \\ 0 & -1 & 0 \end{bmatrix} \\
 ```
 ![Image convolution process for x-direction](/readmeImages/convolution.png)
 __Figure 4__ Image convolution process.
 
-Figure 4 demonstrates the image convolution process for the x-direction. To perform the convolution, the kernel is overlaid on each pixel in the image. The values in $H_1$ are multiplied by their corresponding values in the overlay region then summed in a method similar to the dot product. The output 
-is equal to $H_x$. Because we are using a two-directional kernel, the same process must be repeated with $H_2$.
-$$H_x=\sum_{i=1}^9 H_{1,i}P_i$$
-$$H_y=\sum_{i=1}^9 H_{2,j}P_j$$
-where $H_{1,i}$ is the *i*th value in the $H_1$ kernel, $H_{2,j}$ is the *i*th value in the $H_2$ kernel, and $P_i$ is the *i*th pixel in the overlay region.
+Figure 4 demonstrates the image convolution process for the x-direction. To perform the convolution, the kernel is overlaid on each pixel in the image. The values in $K$ are multiplied by their corresponding values in the overlay region then summed in a method similar to the dot product. The output 
+is equal to $H_{xy}$.
+$$H_{xy}=\sum_{i=1}^9 H_iP_i$$
+where $H_i$ is the *i*th value in kernel $K$ and $P_i$ is the *i*th pixel in the overlay region.
 
-The final grayscale value for the central pixel in the overlay region is calculated as follows:
-$$H=\sqrt{H_x^2+H_y^2}$$
-The sharpened image is displayed in Figure 3. The primary difference between the grayscale and sharpened images is the definition of edges. The boundary between the trees and the sky, for instance, becomes much sharper.
+The sharpened image is displayed in Figure 3. The primary difference between the grayscale and sharpened images is the definition of edges. The boundaries between each of the petals, for instance, become much sharper.
 
 ### 4. Apply Sobel Operator
 ![Image after Sobel operator is applied](/readmeImages/waterLily_sobel.jpg)
 __Figure 5__ Image after Sobel processing.
 
-The fourth step is to apply the Sobel operator. Like the sharpening kernel, the Sobel operator uses image convolution with the following x and y kernels ([Tian 2021](https://www.mdpi.com/2079-9292/10/6/655)).
+The fourth step is to apply the Sobel operator, which utilizes an image convolution process with the following x and y kernels ([Tian 2021](https://www.mdpi.com/2079-9292/10/6/655)).
 ```math
 G_x=\begin{bmatrix} 1 & 0 & -1 \\ 2 & 0 & -2 \\ 1 & 0 & -1 \end{bmatrix} \\
 G_y=\begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{bmatrix}
 ```
-The Sobel operator picks out the edges in the image and sets their grayscale value according to their definition, with 255 being more defined. As a result, the image displays the skeleton of the original image, similar to an x-ray in appearance. Figure 5 shows the image after the Sobel operator is applied.
+The x kernel whitens pixels to the left and right of each pixel, while the y kernel whitens pixels above and below each pixel. As a result, the Sobel operator picks out the edges in the image and sets their grayscale value according to their definition, with 255 being more defined. As a result, the image displays the skeleton of the original image, similar to an x-ray in appearance. Figure 5 shows the image after the Sobel operator is applied.
 
-The vertices in the point cloud come from the set of pixels that meet the threshold value. If a pixel is part of a well-defined edge, the rgb value will be closer to white and fulfill the threshold. Less important points that are not sufficiently white, on the other hand, are filtered out. 
+The vertices in the point cloud come from the set of pixels that meet the threshold value. If a pixel is part of a well-defined edge, the rgb value will be closer to white and fulfill the threshold. Less important points that are not sufficiently white, on the other hand, are filtered out.
 
 ### 5. Triangulate Points
 ![Triangulation of image point cloud](/readmeImages/waterLily_triangulation.png)
@@ -105,7 +101,7 @@ The fifth step is to triangulate the point cloud. Even with a threshold value, t
 ![Final triangulated image](/readmeImages/waterLily_final.png)
 __Figure 7__ Final triangulated image after coloring in triangles.
 
-The sixth and final step is to color in the triangles. For each triangle, we calculate centroid $(x,y)$ and round to the nearest integer. The final color of the triangle is equal to the rgb value at pixel $(x,y)$ in the original image. Figure 7 depicts the final image triangulation.
+The sixth and final step is to color in the triangles. For each triangle, we calculate centroid $(x,y)$ as the average of the triangle's vertices and round to the nearest integer. The final color of the triangle is equal to the rgb value at pixel $(x,y)$ in the original image. Figure 7 depicts the final image triangulation.
 
 ## Varying Triangulation Parameters
 The two varying parameters in the algorithm are the threshold value and density reduction parameter.
@@ -118,7 +114,7 @@ The threshold value is directly related to the number of vertices in the triangu
 
 ### Varying Density
 ![Image triangulation for varying point cloud densities](/readmeImages/densityVariation.png)
-__Figure 9__ Point cloud triangulation and final image triangulation for density reductions of 1, 20, and 40.
+__Figure 9__ Point cloud triangulation and final image triangulation for density reductions of 20, 40, and 60.
 
 Changing the density reduction does not significantly alter the appearance of the final image triangulation compared to varying the threshold. In other words, the output images in Figure 8 do not look very different from the ones in Figure 9. The image in the leftmost panel in Figure 9, though, demonstrates the extent to which density reduction declutters the points. As a result, the main purpose of density reduction is to decrease run time and avoid clusters of very small triangles.
 
@@ -126,7 +122,7 @@ Changing the density reduction does not significantly alter the appearance of th
 ![Image triangulation using a random point cloud](/readmeImages/randomPoints.png)
 __Figure 10__ Point cloud triangulation and final image triangulation for a randomized point cloud.
 
-If we use random points as the vertices for the triangulation, the integrity of the image is lost. The image becomes quite unrecognizable. Figure 10, for example, shows the image triangulation using 1200 randomly generated points, which is slightly more than the number of vertices that the edge detection method finds. Many of the features are lost, and the image becomes garbled. By using edge detection, though, we can reduce the number of points needed to make a recognizable image and preserve the underlying skeleton.
+If we use random points as the vertices for the triangulation, the integrity of the image is lost. Figure 10, for example, shows the image triangulation using 1000 randomly generated points, which is slightly less than the number of vertices that the edge detection method finds. Many of the features are lost, and the image becomes garbled. By using edge detection, though, we can reduce the number of points needed to make a recognizable image and preserve the underlying skeleton.
 
 ## Conclusion
 While the algorithm we outline successfully triangulates any image, the ideal threshold value and density reduction parameter are subjective. If a user desires a more abstract image, a higher threshold value, higher density reduction parameter, or randomized point cloud is suitable. However, if a user is aspiring for a triangulated image closer to the original image, the opposite holds true.
