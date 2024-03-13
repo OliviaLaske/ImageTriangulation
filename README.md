@@ -11,6 +11,8 @@ There are several existing algorithms to perform image triangulation. [Marwood e
 
 Endre Simo also details an image triangulation process in his blog post titled [Delaunay Image Triangulation](https://www.esimov.com/2019/04/image-triangulation-in-go). While both Simo's algorithm and our algorithm use Sobel edge detection and Delaunay triangulation, the two processes were developed independently without reference. Simo's method does not include a density reduction parameter or sharpening step and retains the vertex output by edge detection. Instead, similar edges are removed to clean up the appearance.
 
+Other algorithms include those described by [Lawonn and G&uuml;nther (2019)](https://onlinelibrary.wiley.com/doi/abs/10.1111/cgf.13526) and [Onoja and Aboiyar (2020)](https://www.researchgate.net/publication/343188422_Digital_Image_Segmentation_Using_Delaunay_Triangulation_Algorithm).
+
 ## Installation
 In order to run the program, download imageTriangulation.ipynb and open it in a code editor such as Visual Studio code. Ensure that `python` as well as the following dependencies are installed:
 - math
@@ -32,7 +34,7 @@ Run
 to triangulate the image. Once the window displays the uncolored triangulation, close the window to view the final result.
 
 ## Included Folders and Files
-The originalImages folder contains sample images. In order to use them, replace the string `waterLily.jpeg` with the name of the desired image.
+The originalImages folder contains sample images. In order to use them, replace the string `waterLily.jpeg` with the name of the desired image. Any additional images uploaded to the originalImages folder may also be used.
 
 The `triangulatedImages` folder contains the triangulated versions of the images in the originalImages folder for reference.
 
@@ -137,7 +139,11 @@ While the algorithm we outline successfully triangulates any image, the ideal th
 There are multiple future directions for this algorithm. The first is to consider the dual graph of the Delaunay triangulation. Each Voronoi region would then be colored accordingly instead of each triangle. The output would be more similar to a mosaic and could be considered a separate form of art. In addition, a website that includes a drag and drop box for image upload as well as adjustable parameters could make the program more user-friendly and interactive. Since the website would be coded in HTML, CSS, and JavaScript, `imageTriangulation.py` would need translation from Python. Each of these extensions could significantly improve user experience.
 
 ## References
-Marwood, D., Massimino, M., Covell, M., Baluja, S., "Representing Images in 200 Bytes: Compression via Triangulation," *IEEE* ICIP, 2018.
+Lawonn, K., G&uuml;nther, T., "Stylized Image Triangulation," *Computer Graphics Forum*, 2019.
+
+Marwood, D., Massimino, M., Covell, M., Baluja, S., "Representing Images in 200 Bytes: Compression via Triangulation," *IEEE ICIP*, 2018.
+
+Onoja, G., Aboiyar, P., "Digital Image Segmentation Using Delaunay Triangulation Algorithm," *Nigerian Annals of Pure and Applied Sciences*, vol. 3, pp. 268-283, 2020.
 
 Pham, T., "Kriging-Weighted Laplacian Kernels for Grayscale Image Sharpening," *IEEE*, vol. 10, 2022.
 
