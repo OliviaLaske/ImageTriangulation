@@ -39,7 +39,7 @@ for param in params.keys():
 # Load image
 threshold = 50
 densityReduction = 20
-image_path = os.getcwd() + '/originalImages/tajMahal.jpg'
+image_path = os.getcwd() + '/originalImages/waterLily.jpeg'
 image_orig = Image.open(image_path)
 image = Image.open(image_path)
 image_data = image.load()

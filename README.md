@@ -29,20 +29,12 @@ Run
 
 to triangulate the image. Once the window displays the uncolored triangulation, close the window to view the final result.
 
-Run
-
-```python delaunayTriangulation.py```
-
-to create a randomized Delaunay triangulation.
-
 ## Included Folders and Files
-The originalImages folder contains sample images. In order to use them, replace the string `tajMahal.jpg` with the name of the desired image.
+The originalImages folder contains sample images. In order to use them, replace the string `waterLily.jpeg` with the name of the desired image.
 
 The `triangulatedImages` folder contains the triangulated versions of the images in the originalImages folder for reference.
 
 `imageTriangulation.py` contains the Python script for creating an image triangulation with vertices chosen with Sobel edge detection. The commented out code randomly generates final vertices instead of using Sobel edge detection.
-
-`delaunayTriangulation.py` contains a Python script for determining the Delaunay triangulation for a randomized point cloud. Due to time constraints, the algorithm currently only works for relatively sparse point clouds. The algorithm is loosely based on the pseudocode provided by [Mount 2020](https://www.cs.umd.edu/class/spring2020/cmsc754/Lects/lect13-delaun-alg.pdf).
 
 ## Algorithm
 The algorithm consists of six steps:
@@ -54,13 +46,13 @@ The algorithm consists of six steps:
 6. Color in Triangles
 
 ### 1. Set Initial Values
-![Original image](/readmeImages/tajMahal_orig.jpg)
+![Original image](/readmeImages/waterLily_orig.jpg)
 __Figure 1__ Original image
 
 The first step is to input the original image as well as set the threshold value and density reduction parameter to determine the total number of triangles. The threshold value must be between 0 and 255, and the density reduction parameter must be greater than or equal to 1. Figure 1 displays an image of the Taj Mahal as an example. The threshold value is set to 50, and the density reduction parameter is set to 20.
 
 ### 2. Convert to Grayscale
-![Grayscale image](/readmeImages/tajMahal_grey.jpg)
+![Grayscale image](/readmeImages/waterLily_grey.jpg)
 __Figure 2__ Grayscale image.
 
 The second step is to convert the image to grayscale so that image processing operators can be applied in the next two steps. For each pixel in the image, the rgb value can be inserted into the following equation to find the output grayscale value ([Pham 2022](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9783180)):
@@ -69,7 +61,7 @@ $$rgb=(c,c,c)$$
 Notice that the defining feature of a gray color is $r=g=b$. This number is then rounded to the nearest integer to produce a valid rgb value. For example, if a pixel has $rgb=(100,180,255)$, inputting $rgb$ into the grayscale equation yields a final value of $(165,165,165)$. After iterating over each pixel, Figure 2 displays the output grayscale image.
 
 ### 3. Sharpen Image
-![Sharpened image](/readmeImages/tajMahal_sharpened.jpg)
+![Sharpened image](/readmeImages/waterLily_sharpened.jpg)
 __Figure 3__ Sharpened image.
 
 The third step is to sharpen the image using a two-directional sharpening kernel in order to more clearly define the edges in the image. The sharpening kernel includes two separate kernels with one for the x-direction and the other for the y-direction. In order to sharpen the image evenly in both directions, $H_1=H_2$. The value $\alpha$ controls the degree of sharpening. Here, we use 4, though 1 is also a standard value.
@@ -91,7 +83,7 @@ $$H=\sqrt{H_x^2+H_y^2}$$
 The sharpened image is displayed in Figure 3. The primary difference between the grayscale and sharpened images is the definition of edges. The boundary between the trees and the sky, for instance, becomes much sharper.
 
 ### 4. Apply Sobel Operator
-![Image after Sobel operator is applied](/readmeImages/tajMahal_sobel.jpg)
+![Image after Sobel operator is applied](/readmeImages/waterLily_sobel.jpg)
 __Figure 5__ Image after Sobel processing.
 
 The fourth step is to apply the Sobel operator. Like the sharpening kernel, the Sobel operator uses image convolution with the following x and y kernels ([Tian 2021](https://www.mdpi.com/2079-9292/10/6/655)).
@@ -104,13 +96,13 @@ The Sobel operator picks out the edges in the image and sets their grayscale val
 The vertices in the point cloud come from the set of pixels that meet the threshold value. If a pixel is part of a well-defined edge, the rgb value will be closer to white and fulfill the threshold. Less important points that are not sufficiently white, on the other hand, are filtered out. 
 
 ### 5. Triangulate Points
-![Triangulation of image point cloud](/readmeImages/tajMahal_triangulation.png)
+![Triangulation of image point cloud](/readmeImages/waterLily_triangulation.png)
 __Figure 6__ Triangulation of image point cloud after density reduction.
 
 The fifth step is to triangulate the point cloud. Even with a threshold value, though, the points are still too densely packed to create a visually appealing image. If S is the point cloud, `len(S)/densityReduction` points can be sampled from $S$ to reduce the density. The Delaunay triangulation of the final point cloud is then calculated using `scipy.spatial.Delaunay`. Figure 6 shows the uncolored triangulation of the image.
 
 ### 6. Color in Triangles
-![Final triangulated image](/readmeImages/tajMahal_final.png)
+![Final triangulated image](/readmeImages/waterLily_final.png)
 __Figure 7__ Final triangulated image after coloring in triangles.
 
 The sixth and final step is to color in the triangles. For each triangle, we calculate centroid $(x,y)$ and round to the nearest integer. The final color of the triangle is equal to the rgb value at pixel $(x,y)$ in the original image. Figure 7 depicts the final image triangulation.
@@ -139,12 +131,10 @@ If we use random points as the vertices for the triangulation, the integrity of 
 ## Conclusion
 While the algorithm we outline successfully triangulates any image, the ideal threshold value and density reduction parameter are subjective. If a user desires a more abstract image, a higher threshold value, higher density reduction parameter, or randomized point cloud is suitable. However, if a user is aspiring for a triangulated image closer to the original image, the opposite holds true.
 
-There are multiple future directions for this algorithm. The first is to consider the dual graph of the Delaunay triangulation. Each Voronoi region would then be colored accordingly instead of each triangle. The output would be more similar to a mosaic and could be considered a separate form of art. Another direction is to debug and implement `delaunayTriangulation.py` for use in `imageTriangulation.py`. Due to time constraints, there are still several errors in the code that arise with dense point clouds. Finally, a website that includes a drag and drop box for image upload as well as adjustable parameters could make the program more user-friendly and interactive. Since the website would be coded in HTML, CSS, and JavaScript, both `delaunayTriangulation.py` and `imageTriangulation.py` would need translation from Python. Each of these extensions could significantly improve user experience.
+There are multiple future directions for this algorithm. The first is to consider the dual graph of the Delaunay triangulation. Each Voronoi region would then be colored accordingly instead of each triangle. The output would be more similar to a mosaic and could be considered a separate form of art. In addition, a website that includes a drag and drop box for image upload as well as adjustable parameters could make the program more user-friendly and interactive. Since the website would be coded in HTML, CSS, and JavaScript, `imageTriangulation.py` would need translation from Python. Each of these extensions could significantly improve user experience.
 
 ## References
 Marwood, D., Massimino, M., Covell, M., Baluja, S., "Representing Images in 200 Bytes: Compression via Triangulation," *IEEE* ICIP, 2018.
-
-Mount, D., "CMSC 754: Lecture 13 - Delaunay Triangulations: Incremental Construction," 2020.
 
 Pham, T., "Kriging-Weighted Laplacian Kernels for Grayscale Image Sharpening," *IEEE*, vol. 10, 2022.
 
