@@ -79,8 +79,8 @@ __Figure 4__ Image convolution process.
 
 Figure 4 demonstrates the image convolution process for the x-direction. To perform the convolution, the kernel is overlaid on each pixel in the image. The values in $K$ are multiplied by their corresponding values in the overlay region then summed in a method similar to the dot product. The output 
 is equal to $H_{xy}$.
-$$H_{xy}=\sum_{i=1}^9 H_iP_i$$
-where $H_i$ is the *i*th value in kernel $K$ and $P_i$ is the *i*th pixel in the overlay region.
+$$H_{xy}=\sum_{i=1}^9 I_iK_i$$
+where $H_i$ is the *i*th value in kernel $K$ and $P_i$ is the *i*th pixel in the overlay region. Therefore, for the pixel shown in pink, $H_{xy}=-b-d+8e-f-h$.
 
 The sharpened image is displayed in Figure 3. The primary difference between the grayscale and sharpened images is the definition of edges. The boundaries between each of the petals, for instance, become much sharper.
 
