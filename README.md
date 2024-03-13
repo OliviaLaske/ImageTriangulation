@@ -49,12 +49,14 @@ The algorithm consists of six steps:
 
 ### 1. Set Initial Values
 ![Original image](/readmeImages/waterLily_orig.jpg)
+
 __Figure 1__ Original image
 
 The first step is to input the original image as well as set the threshold value and density reduction parameter to determine the total number of triangles. The threshold value must be between 0 and 255, and the density reduction parameter must be greater than or equal to 1. Figure 1 displays an image of the Taj Mahal as an example. The threshold value is set to 50, and the density reduction parameter is set to 20.
 
 ### 2. Convert to Grayscale
 ![Grayscale image](/readmeImages/waterLily_grey.jpg)
+
 __Figure 2__ Grayscale image.
 
 The second step is to convert the image to grayscale so that image processing operators can be applied in the next two steps. For each pixel in the image, the rgb value can be inserted into the following equation to find the output grayscale value ([Pham 2022](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9783180)):
@@ -64,6 +66,7 @@ Notice that the defining feature of a gray color is $r=g=b$. This number is then
 
 ### 3. Sharpen Image
 ![Sharpened image](/readmeImages/waterLily_sharpened.jpg)
+
 __Figure 3__ Sharpened image.
 
 The third step is to sharpen the image using a $3\times3$ kernel in order to more clearly define the edges in the image. The value $\alpha$ controls the degree of sharpening. Here, we use 4, though 1 is also a standard value.
@@ -71,6 +74,7 @@ The third step is to sharpen the image using a $3\times3$ kernel in order to mor
 K=\begin{bmatrix} 0 & -1 & 0 \\ -1 & \alpha + 4 & -1 \\ 0 & -1 & 0 \end{bmatrix} \\
 ```
 ![Image convolution process for x-direction](/readmeImages/convolution.png)
+
 __Figure 4__ Image convolution process.
 
 Figure 4 demonstrates the image convolution process for the x-direction. To perform the convolution, the kernel is overlaid on each pixel in the image. The values in $K$ are multiplied by their corresponding values in the overlay region then summed in a method similar to the dot product. The output 
@@ -82,6 +86,7 @@ The sharpened image is displayed in Figure 3. The primary difference between the
 
 ### 4. Apply Sobel Operator
 ![Image after Sobel operator is applied](/readmeImages/waterLily_sobel.jpg)
+
 __Figure 5__ Image after Sobel processing.
 
 The fourth step is to apply the Sobel operator, which utilizes an image convolution process with the following x and y kernels ([Tian 2021](https://www.mdpi.com/2079-9292/10/6/655)).
@@ -95,12 +100,14 @@ The vertices in the point cloud come from the set of pixels that meet the thresh
 
 ### 5. Triangulate Points
 ![Triangulation of image point cloud](/readmeImages/waterLily_triangulation.png)
+
 __Figure 6__ Triangulation of image point cloud after density reduction.
 
 The fifth step is to triangulate the point cloud. Even with a threshold value, though, the points are still too densely packed to create a visually appealing image. If S is the point cloud, `len(S)/densityReduction` points can be sampled from $S$ to reduce the density. The Delaunay triangulation of the final point cloud is then calculated using `scipy.spatial.Delaunay`. Figure 6 shows the uncolored triangulation of the image.
 
 ### 6. Color in Triangles
 ![Final triangulated image](/readmeImages/waterLily_final.png)
+
 __Figure 7__ Final triangulated image after coloring in triangles.
 
 The sixth and final step is to color in the triangles. For each triangle, we calculate centroid $(x,y)$ as the average of the triangle's vertices and round to the nearest integer. The final color of the triangle is equal to the rgb value at pixel $(x,y)$ in the original image. Figure 7 depicts the final image triangulation.
