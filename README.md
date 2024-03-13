@@ -59,7 +59,7 @@ Before the algorithm begins, we input the original image as well as set the thre
 
 __Figure 2__ Grayscale image.
 
-The first step is to convert the image to grayscale so that image processing operators can be applied in the next two steps. For each pixel in the image, the rgb value can be inserted into the following equation to find the output grayscale value ([Pham 2022](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9783180)):
+The first step is to convert the image to grayscale so that image processing operators can be applied in the next two steps. For each pixel in the image, the rgb value can be inserted into the following equation to find the output grayscale value ([Pham (2022)](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9783180)):
 $$c=0.299r+0.587g+0.114b$$
 $$rgb=(c,c,c)$$
 Notice that the defining feature of a gray color is $r=g=b$. This number is then rounded to the nearest integer to produce a valid rgb value. For example, if a pixel has $rgb=(100,180,255)$, inputting $rgb$ into the grayscale equation yields a final value of $(165,165,165)$. After iterating over each pixel, Figure 2 displays the output grayscale image.
@@ -89,7 +89,7 @@ The sharpened image is displayed in Figure 3. The primary difference between the
 
 __Figure 5__ Image after Sobel processing.
 
-The third step is to apply the Sobel operator, which utilizes an image convolution process with the following x and y kernels ([Tian 2021](https://www.mdpi.com/2079-9292/10/6/655)).
+The third step is to apply the Sobel operator, which utilizes an image convolution process with the following x and y kernels ([Tian (2021)](https://www.mdpi.com/2079-9292/10/6/655)).
 ```math
 G_x=\begin{bmatrix} 1 & 0 & -1 \\ 2 & 0 & -2 \\ 1 & 0 & -1 \end{bmatrix} \\
 G_y=\begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{bmatrix}
