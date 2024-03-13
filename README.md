@@ -2,7 +2,7 @@
 ## ![Image Triangulation Examples (Video)](https://youtu.be/GIOX9amXu9M)
 
 ## Abstract
-While triangulating an image is a relatively simple process, difficulties arise when determining which vertices to include such that the output image remains recognizable and visually pleasing. Here, we develop an image triangulation algorithm in Python that utilizes Sobel edge detection and point cloud sparsification to determine final vertices for Delaunay triangulation. We find that the algorithm successfully triangulates all images. However, the algorithm does not produce consistent results across all images, and the edge detection threshold parameter and sparsification parameter must be varied according to original image detail.
+Image triangulation, the practice of decomposing images into triangles, deliberately employs simplification to create an abstracted piece of art. While triangulating an image is a relatively simple process, difficulties arise when determining which vertices produce recognizable and visually pleasing output images. Here, we discuss an image triangulation algorithm in Python that utilizes Sobel edge detection and point cloud sparsification to determine final vertices for a Delaunay triangulation, resulting in the creation of artistic triangulated compositions.
 
 ## Introduction
 Image triangulation creates an abstract representation of an image as a form of art, which can be defined by four primary principles. The output image must divide the original image into a set of non-overlapping triangles, simplify the original image, approximate original image features as triangles, and retain the integrity of the original image.
@@ -39,37 +39,35 @@ The `triangulatedImages` folder contains the triangulated versions of the images
 `imageTriangulation.py` contains the Python script for creating an image triangulation with vertices chosen with Sobel edge detection. The commented out code randomly generates final vertices instead of using Sobel edge detection.
 
 ## Algorithm
-The algorithm consists of six steps:
-1. Set Initial Values
-2. Convert to Grayscale
-3. Sharpen Image
-4. Apply Sobel Operator
-5. Triangulate Points
-6. Color in Triangles
+The algorithm consists of five steps:
+1. Convert to Grayscale
+2. Sharpen Image
+3. Apply Sobel Operator
+4. Triangulate Points
+5. Color in Triangles
 
-### 1. Set Initial Values
 ![Original image](/readmeImages/waterLily_orig.jpg)
 
 __Figure 1__ Original image
 
-The first step is to input the original image as well as set the threshold value and density reduction parameter to determine the total number of triangles. The threshold value must be between 0 and 255, and the density reduction parameter must be greater than or equal to 1. Figure 1 displays an image of the Taj Mahal as an example. The threshold value is set to 50, and the density reduction parameter is set to 20.
+Before the algorithm begins, we input the original image as well as set the threshold value and density reduction parameter to determine the total number of triangles. The threshold value must be between 0 and 255, and the density reduction parameter must be greater than or equal to 1. Figure 1 displays an example image. The threshold value is set to 50, and the density reduction parameter is set to 40.
 
-### 2. Convert to Grayscale
+### 1. Convert to Grayscale
 ![Grayscale image](/readmeImages/waterLily_grey.jpg)
 
 __Figure 2__ Grayscale image.
 
-The second step is to convert the image to grayscale so that image processing operators can be applied in the next two steps. For each pixel in the image, the rgb value can be inserted into the following equation to find the output grayscale value ([Pham 2022](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9783180)):
+The first step is to convert the image to grayscale so that image processing operators can be applied in the next two steps. For each pixel in the image, the rgb value can be inserted into the following equation to find the output grayscale value ([Pham 2022](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9783180)):
 $$c=0.299r+0.587g+0.114b$$
 $$rgb=(c,c,c)$$
 Notice that the defining feature of a gray color is $r=g=b$. This number is then rounded to the nearest integer to produce a valid rgb value. For example, if a pixel has $rgb=(100,180,255)$, inputting $rgb$ into the grayscale equation yields a final value of $(165,165,165)$. After iterating over each pixel, Figure 2 displays the output grayscale image.
 
-### 3. Sharpen Image
+### 2. Sharpen Image
 ![Sharpened image](/readmeImages/waterLily_sharpened.jpg)
 
 __Figure 3__ Sharpened image.
 
-The third step is to sharpen the image using a $3\times3$ kernel in order to more clearly define the edges in the image. The value $\alpha$ controls the degree of sharpening. Here, we use 4, though 1 is also a standard value.
+The second step is to sharpen the image using a $3\times3$ kernel in order to more clearly define the edges in the image. The value $\alpha$ controls the degree of sharpening. Here, we use 4, though 1 is also a standard value.
 ```math
 K=\begin{bmatrix} 0 & -1 & 0 \\ -1 & \alpha + 4 & -1 \\ 0 & -1 & 0 \end{bmatrix} \\
 ```
@@ -84,12 +82,12 @@ where $H_i$ is the *i*th value in kernel $K$ and $P_i$ is the *i*th pixel in the
 
 The sharpened image is displayed in Figure 3. The primary difference between the grayscale and sharpened images is the definition of edges. The boundaries between each of the petals, for instance, become much sharper.
 
-### 4. Apply Sobel Operator
+### 3. Apply Sobel Operator
 ![Image after Sobel operator is applied](/readmeImages/waterLily_sobel.jpg)
 
 __Figure 5__ Image after Sobel processing.
 
-The fourth step is to apply the Sobel operator, which utilizes an image convolution process with the following x and y kernels ([Tian 2021](https://www.mdpi.com/2079-9292/10/6/655)).
+The third step is to apply the Sobel operator, which utilizes an image convolution process with the following x and y kernels ([Tian 2021](https://www.mdpi.com/2079-9292/10/6/655)).
 ```math
 G_x=\begin{bmatrix} 1 & 0 & -1 \\ 2 & 0 & -2 \\ 1 & 0 & -1 \end{bmatrix} \\
 G_y=\begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{bmatrix}
@@ -98,19 +96,19 @@ The x kernel whitens pixels to the left and right of each pixel, while the y ker
 
 The vertices in the point cloud come from the set of pixels that meet the threshold value. If a pixel is part of a well-defined edge, the rgb value will be closer to white and fulfill the threshold. Less important points that are not sufficiently white, on the other hand, are filtered out.
 
-### 5. Triangulate Points
+### 4. Triangulate Points
 ![Triangulation of image point cloud](/readmeImages/waterLily_triangulation.png)
 
 __Figure 6__ Triangulation of image point cloud after density reduction.
 
-The fifth step is to triangulate the point cloud. Even with a threshold value, though, the points are still too densely packed to create a visually appealing image. If S is the point cloud, `len(S)/densityReduction` points can be sampled from $S$ to reduce the density. The Delaunay triangulation of the final point cloud is then calculated using `scipy.spatial.Delaunay`. Figure 6 shows the uncolored triangulation of the image.
+The fourth step is to triangulate the point cloud. Even with a threshold value, though, the points are still too densely packed to create a visually appealing image. If S is the point cloud, `len(S)/densityReduction` points can be sampled from $S$ to reduce the density. The Delaunay triangulation of the final point cloud is then calculated using `scipy.spatial.Delaunay`. Figure 6 shows the uncolored triangulation of the image.
 
-### 6. Color in Triangles
+### 5. Color in Triangles
 ![Final triangulated image](/readmeImages/waterLily_final.png)
 
 __Figure 7__ Final triangulated image after coloring in triangles.
 
-The sixth and final step is to color in the triangles. For each triangle, we calculate centroid $(x,y)$ as the average of the triangle's vertices and round to the nearest integer. The final color of the triangle is equal to the rgb value at pixel $(x,y)$ in the original image. Figure 7 depicts the final image triangulation.
+The fifth and final step is to color in the triangles. For each triangle, we calculate centroid $(x,y)$ as the average of the triangle's vertices and round to the nearest integer. The final color of the triangle is equal to the rgb value at pixel $(x,y)$ in the original image. Figure 7 depicts the final image triangulation.
 
 ## Varying Triangulation Parameters
 The two varying parameters in the algorithm are the threshold value and density reduction parameter.
