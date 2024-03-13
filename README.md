@@ -1,4 +1,6 @@
 # Image Triangulation
+## ![Image Triangulation Examples (Video)](https://youtu.be/GIOX9amXu9M)
+
 ## Abstract
 While triangulating an image is a relatively simple process, difficulties arise when determining which vertices to include such that the output image remains recognizable and visually pleasing. Here, we develop an image triangulation algorithm in Python that utilizes Sobel edge detection and point cloud sparsification to determine final vertices for Delaunay triangulation. We find that the algorithm successfully triangulates all images. However, the algorithm does not produce consistent results across all images, and the edge detection threshold parameter and sparsification parameter must be varied according to original image detail.
 
