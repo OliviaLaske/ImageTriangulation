@@ -52,7 +52,7 @@ The algorithm consists of five steps:
 
 __Figure 1__ Original image
 
-Before the algorithm begins, we input the original image as well as set the threshold value and density reduction parameter to determine the total number of triangles. The threshold value must be between 0 and 255, and the density reduction parameter must be greater than or equal to 1. Figure 1 displays an example image. The threshold value is set to 50, and the density reduction parameter is set to 40.
+Before the algorithm begins, we input the original image (all images taken by us) as well as set the threshold value and density reduction parameter to determine the total number of triangles. The threshold value must be between 0 and 255, and the density reduction parameter must be greater than or equal to 1. Figure 1 displays an example image. The threshold value is set to 50, and the density reduction parameter is set to 40.
 
 ### 1. Convert to Grayscale
 ![Grayscale image](/readmeImages/waterLily_grey.jpg)
