@@ -4,6 +4,7 @@ import matplotlib
 from matplotlib.collections import PolyCollection
 import matplotlib.pyplot as plt
 import numpy as np
+from optparse import OptionParser
 import os
 from PIL import Image
 import random
@@ -11,6 +12,22 @@ from scipy.spatial import Delaunay
 
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+parser = OptionParser()
+parser.add_option('-d', '--d', dest='d',
+                  action='store', type='int', default=40,
+                  help='Density parameter')
+parser.add_option('-f', '--file', dest='filepath', default=os.getcwd() + '/originalImages/waterLily.jpeg',
+                  action='store', help='Image path for image to triangulate')
+parser.add_option('-g', '--g', dest='finalname', default=os.getcwd() + '/originalImages/waterLily_final.jpeg',
+                  action='store', help='Final image name for saving')
+parser.add_option('-s', '--s', dest='save',
+                  action='store_true', help='Save final image')
+parser.add_option('-t', '--t', dest='t',
+                  action='store', type='int', default=50,
+                  help='Threshold value')
+
+(options, args) = parser.parse_args()
 
 # Plot formatting
 matplotlib.rcParams.update(matplotlib.rcParamsDefault)
@@ -37,11 +54,11 @@ for param in params.keys():
     matplotlib.rcParams[param] = params[param]
 
 # Load image
-threshold = 50
-densityReduction = 40
-image_path = os.getcwd() + '/originalImages/waterLily.jpeg'
-image_orig = Image.open(image_path)
-image = Image.open(image_path)
+threshold = options.t
+densityReduction = options.d
+# image_path = os.getcwd() + '/originalImages/waterLily.jpeg'
+image_orig = Image.open(options.filepath)
+image = Image.open(options.filepath)
 image_data = image.load()
 image.show()
 
@@ -59,50 +76,27 @@ image.show()
 # Image Sharpening
 # Define kernels
 alpha = 4
-H1 = [[0, -1, 0], [-1, alpha + 4, -1], [0, -1, 0]]
-H2 = [[0, -1, 0], [-1, alpha + 4, -1], [0, -1, 0]]
+H = [[0, -1, 0], [-1, alpha + 4, -1], [0, -1, 0]]
 
-# Initialize Gx and Gy and populate with 0s as placeholders
-Gx = [[0]*image.height for i in range(image.width)]
-Gy = [[0]*image.height for i in range(image.width)]
+# Initialize G and populate with 0s as placeholders
 G = [[0]*image.height for i in range(image.width)]
-theta = [[0]*image.height for i in range(image.width)]
 
 maxG = 0
 # Apply sharpening operator
 for i in range(1, image.width - 2):
     for j in range(1, image.height - 2):
-        x1 = H1[0][0]*image.getpixel((i - 1, j - 1))[0]
-        x2 = H1[0][1]*image.getpixel((i, j - 1))[0]
-        x3 = H1[0][2]*image.getpixel((i + 1, j - 1))[0]
-        x4 = H1[1][0]*image.getpixel((i - 1, j))[0]
-        x5 = H1[1][1]*image.getpixel((i, j))[0]
-        x6 = H1[1][2]*image.getpixel((i + 1, j))[0]
-        x7 = H1[2][0]*image.getpixel((i - 1, j + 1))[0]
-        x8 = H1[2][1]*image.getpixel((i, j + 1))[0]
-        x9 = H1[2][2]*image.getpixel((i + 1, j + 1))[0]
-        Gx_val = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
-        Gx[i][j] = Gx_val
-        
-        y1 = H2[0][0]*image.getpixel((i - 1, j - 1))[0]
-        y2 = H2[0][1]*image.getpixel((i, j - 1))[0]
-        y3 = H2[0][2]*image.getpixel((i + 1, j - 1))[0]
-        y4 = H2[1][0]*image.getpixel((i - 1, j))[0]
-        y5 = H2[1][1]*image.getpixel((i, j))[0]
-        y6 = H2[1][2]*image.getpixel((i + 1, j))[0]
-        y7 = H2[2][0]*image.getpixel((i - 1, j + 1))[0]
-        y8 = H2[2][1]*image.getpixel((i, j + 1))[0]
-        y9 = H2[2][2]*image.getpixel((i + 1, j + 1))[0]
-        Gy_val = y1 + y2 + y3 + y4 + y5 + y6 + y7 + y8 + y9
-        Gy[i][j] = Gy_val
-        
-        G_val = math.sqrt(Gx_val**2 + Gy_val**2)
+        x1 = H[0][0]*image.getpixel((i - 1, j - 1))[0]
+        x2 = H[0][1]*image.getpixel((i, j - 1))[0]
+        x3 = H[0][2]*image.getpixel((i + 1, j - 1))[0]
+        x4 = H[1][0]*image.getpixel((i - 1, j))[0]
+        x5 = H[1][1]*image.getpixel((i, j))[0]
+        x6 = H[1][2]*image.getpixel((i + 1, j))[0]
+        x7 = H[2][0]*image.getpixel((i - 1, j + 1))[0]
+        x8 = H[2][1]*image.getpixel((i, j + 1))[0]
+        x9 = H[2][2]*image.getpixel((i + 1, j + 1))[0]
+        G_val = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
         G[i][j] = G_val
         
-        try:
-            theta[i][j] = math.atan(Gy_val/Gx_val)
-        except:
-            theta[i][j] = math.inf
         if(G_val > maxG):
             maxG = G_val
 
@@ -233,6 +227,8 @@ for triangle in range(len(triangles.simplices)):
     ax.fill(xs, ys, color=(R, G, B))
 ax.set_axis_off()
 
-# image_name = 'tajMahal_final' # replace with desired image name
-# plt.savefig(os.getcwd() + '/triangulatedImages/' + image_name) # save image
+if(options.save):
+    image_name = options.finalname # replace with desired image name
+    plt.savefig(os.getcwd() + '/triangulatedImages/' + image_name) # save image
+
 plt.show()
