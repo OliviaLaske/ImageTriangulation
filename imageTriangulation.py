@@ -13,13 +13,14 @@ from scipy.spatial import Delaunay
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+# Command line options
 parser = OptionParser()
 parser.add_option('-d', '--d', dest='d',
                   action='store', type='int', default=40,
                   help='Density parameter')
 parser.add_option('-f', '--file', dest='filepath', default=os.getcwd() + '/originalImages/waterLily.jpeg',
                   action='store', help='Image path for image to triangulate')
-parser.add_option('-g', '--g', dest='finalname', default=os.getcwd() + '/originalImages/waterLily_final.jpeg',
+parser.add_option('-g', '--g', dest='finalname', default='triangulated.jpeg',
                   action='store', help='Final image name for saving')
 parser.add_option('-s', '--s', dest='save',
                   action='store_true', help='Save final image')
@@ -56,7 +57,6 @@ for param in params.keys():
 # Load image
 threshold = options.t
 densityReduction = options.d
-# image_path = os.getcwd() + '/originalImages/waterLily.jpeg'
 image_orig = Image.open(options.filepath)
 image = Image.open(options.filepath)
 image_data = image.load()
@@ -228,6 +228,7 @@ for triangle in range(len(triangles.simplices)):
 ax.set_axis_off()
 
 if(options.save):
+    print('here')
     image_name = options.finalname # replace with desired image name
     plt.savefig(os.getcwd() + '/triangulatedImages/' + image_name) # save image
 

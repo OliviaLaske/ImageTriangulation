@@ -23,7 +23,13 @@ In order to run the program, download imageTriangulation.ipynb and open it in a 
 - random
 - scipy
 
-To select which image is triangulated, replace the string `image_path` with the file path for the desired image. The optimal `threshold` and `densityReduction` parameters vary depending on the image, but a general guideline is to use lower thresholds for more detailed images. In order to run the program, use the Terminal to navigate to the directory where the project is stored.
+The command line interface includes several options. 
+1. `-d` Set density reduction parameter
+2. `-f` Set file path to desired image
+3. `-g` Set file name of the triangulated image
+4. `-s` Save triangulated image to triangulatedImages folder with file name designated by `-g`
+5. `-t` Set threshold parameter
+Note that the optimal `threshold` and `densityReduction` parameters vary depending on the image, but a general guideline is to use lower thresholds for more detailed images. In order to run the program, use the Terminal to navigate to the directory where the project is stored.
 
 ```cd file_path/ImageTriangulation/```
 
@@ -31,7 +37,11 @@ Run
 
 ```python imageTriangulation.py```
 
-to triangulate the image. Once the window displays the uncolored triangulation, close the window to view the final result.
+to triangulate the image using the command line options as needed. For example:
+
+```python imageTriangulation.py -d 50 -g finalImage.png -s -t 60```
+
+Once the window displays the uncolored triangulation, close the window to view the final result.
 
 ## Included Folders and Files
 The originalImages folder contains sample images. In order to use them, replace the string `waterLily.jpeg` with the name of the desired image. Any additional images uploaded to the originalImages folder may also be used.
