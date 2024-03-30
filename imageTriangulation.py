@@ -16,7 +16,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 # Command line options
 parser = OptionParser()
 parser.add_option('-d', '--d', dest='d',
-                  action='store', type='int', default=40,
+                  action='store', type='int', default=60,
                   help='Density parameter')
 parser.add_option('-f', '--file', dest='filepath', default=os.getcwd() + '/originalImages/waterLily.jpeg',
                   action='store', help='Image path for image to triangulate')
@@ -75,8 +75,7 @@ image.show()
 
 # Image Sharpening
 # Define kernels
-alpha = 4
-H = [[0, -1, 0], [-1, alpha + 4, -1], [0, -1, 0]]
+H = [[0, -1, 0], [-1, 5, -1], [0, -1, 0]]
 
 # Initialize G and populate with 0s as placeholders
 G = [[0]*image.height for i in range(image.width)]

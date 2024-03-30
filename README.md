@@ -62,7 +62,7 @@ The algorithm consists of five steps:
 
 __Figure 1__ Original image
 
-Before the algorithm begins, we input the original image (all images taken by us) as well as set the threshold value and density reduction parameter to determine the total number of triangles. The threshold value must be between 0 and 255, and the density reduction parameter must be greater than or equal to 1. Figure 1 displays an example image. The threshold value is set to 50, and the density reduction parameter is set to 40.
+Before the algorithm begins, we input the original image (all images taken by us) as well as set the threshold value and density reduction parameter to determine the total number of triangles. The threshold value must be between 0 and 255, and the density reduction parameter must be greater than or equal to 1. Figure 1 displays an example image. The threshold value is set to 50, and the density reduction parameter is set to 60.
 
 ### 1. Convert to Grayscale
 ![Grayscale image](/readmeImages/waterLily_grey.jpg)
@@ -79,18 +79,18 @@ Notice that the defining feature of a gray color is $r=g=b$. This number is then
 
 __Figure 3__ Sharpened image.
 
-The second step is to sharpen the image using a $3\times3$ kernel in order to more clearly define the edges in the image. The value $\alpha$ controls the degree of sharpening. Here, we use 4, though 1 is also a standard value.
+The second step is to sharpen the image using a $3\times3$ kernel in order to more clearly define the edges in the image.
 ```math
-K=\begin{bmatrix} 0 & -1 & 0 \\ -1 & \alpha + 4 & -1 \\ 0 & -1 & 0 \end{bmatrix} \\
+L_1=\begin{bmatrix} 0 & -1 & 0 \\ -1 & 5 & -1 \\ 0 & -1 & 0 \end{bmatrix} \\
 ```
 ![Image convolution process for x-direction](/readmeImages/convolution.png)
 
 __Figure 4__ Image convolution process.
 
-Figure 4 demonstrates the image convolution process for the x-direction. To perform the convolution, the kernel is overlaid on each pixel in the image. The values in $K$ are multiplied by their corresponding values in the overlay region then summed in a method similar to the dot product. The output 
+Figure 4 demonstrates the image convolution process. To perform the convolution, the kernel is overlaid on each pixel in the image. The values in $L_1$ are multiplied by their corresponding values in the overlay region then summed in a method similar to the dot product. The output 
 is equal to $H_{xy}$.
-$$H_{xy}=\sum_{i=1}^9 I_iK_i$$
-where $H_i$ is the *i*th value in kernel $K$ and $P_i$ is the *i*th pixel in the overlay region. Therefore, for the pixel shown in pink, $H_{xy}=-b-d+8e-f-h$.
+$$H_{xy}=\sum_{i=1}^9 I_iL_{1,i}$$
+where $H_i$ is the *i*th value in kernel $L_1$ and $P_i$ is the *i*th pixel in the overlay region. Therefore, for the pixel shown in pink, $H_{xy}=-b-d+8e-f-h$.
 
 The sharpened image is displayed in Figure 3. The primary difference between the grayscale and sharpened images is the definition of edges. The boundaries between each of the petals, for instance, become much sharper.
 
@@ -126,19 +126,28 @@ The fifth and final step is to color in the triangles. For each triangle, we cal
 The two varying parameters in the algorithm are the threshold value and density reduction parameter.
 
 ### Varying Thresholds
-![Image triangulation for varying thresholds](/readmeImages/thresholdVariation.png)
+![t=25 triangulation](/readmeImages/waterLily_t25_triangulation.png) | ![t=25](/readmeImages/waterLily_t25.png)
+:-------------------------:|:-------------------------:
+![t=50 triangulation](/readmeImages/waterLily_triangulation.png) | ![t=50](/readmeImages/waterLily_final.png)
+:-------------------------:|:-------------------------:
+![t=75 triangulation](/readmeImages/waterLily_t75_triangulation.png) | ![t=75](/readmeImages/waterLily_t75.png)
 __Figure 8__ Point cloud triangulation and final image triangulation for thresholds of 25, 50, and 75.
 
 The threshold value is directly related to the number of vertices in the triangulation. As Figure 8 shows, the number of vertices and triangles decreases as the threshold increases.
 
 ### Varying Density
-![Image triangulation for varying point cloud densities](/readmeImages/densityVariation.png)
-__Figure 9__ Point cloud triangulation and final image triangulation for density reductions of 20, 40, and 60.
+![d=35 triangulation](/readmeImages/waterLily_t25_triangulation.png) | ![d=35](/readmeImages/waterLily_t25.png)
+:-------------------------:|:-------------------------:
+![d=60 triangulation](/readmeImages/waterLily_triangulation.png) | ![d=60](/readmeImages/waterLily_final.png)
+:-------------------------:|:-------------------------:
+![d=85 triangulation](/readmeImages/waterLily_t75_triangulation.png) | ![d=85](/readmeImages/waterLily_t75.png)
+__Figure 9__ Point cloud triangulation and final image triangulation for density reductions of 35, 60, and 85.
 
-Changing the density reduction does not significantly alter the appearance of the final image triangulation compared to varying the threshold. In other words, the output images in Figure 8 do not look very different from the ones in Figure 9. The image in the leftmost panel in Figure 9, though, demonstrates the extent to which density reduction declutters the points. As a result, the main purpose of density reduction is to decrease run time and avoid clusters of very small triangles.
+Changing the density reduction does not significantly alter the appearance of the final image triangulation. The image in the leftmost panel of Figure 9, though, demonstrates the extent to which density reduction declutters the points as opposed to changing the threshold. As a result, the main purpose of density reduction is to decrease run time and avoid clusters of very small triangles.
 
 ### Ramdomized Point Cloud
-![Image triangulation using a random point cloud](/readmeImages/randomPoints.png)
+![Triangulation for random point cloud](/readmeImages/random.png) | ![Triangulated image using a randomized point cloud](/readmeImages/randomTriangulation.png)
+
 __Figure 10__ Point cloud triangulation and final image triangulation for a randomized point cloud.
 
 If we use random points as the vertices for the triangulation, the integrity of the image is lost. Figure 10, for example, shows the image triangulation using 1000 randomly generated points, which is slightly less than the number of vertices that the edge detection method finds. Many of the features are lost, and the image becomes garbled. By using edge detection, though, we can reduce the number of points needed to make a recognizable image and preserve the underlying skeleton.
