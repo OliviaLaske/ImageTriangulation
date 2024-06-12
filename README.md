@@ -1,5 +1,5 @@
 # Image Triangulation
-## [Image Triangulation Examples (Video)](https://www.youtube.com/watch?v=GIOX9amXu9M)
+## [Image Triangulation Examples (Video)](https://youtu.be/PlOVQtR-gjY)
 
 ## Abstract
 Image triangulation, the practice of decomposing images into triangles, deliberately employs simplification to create an abstracted piece of art. While triangulating an image is a relatively simple process, difficulties arise when determining which vertices produce recognizable and visually pleasing output images. Here, we discuss an image triangulation algorithm in Python that utilizes Sobel edge detection and point cloud sparsification to determine final vertices for a Delaunay triangulation, resulting in the creation of artistic triangulated compositions.
